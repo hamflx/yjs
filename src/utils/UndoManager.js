@@ -113,6 +113,9 @@ const popStackItem = (undoManager, stack, eventType) => {
         }
       }
       result = performedChange ? stackItem : null
+      if (result) {
+        undoManager.emit('stack-item-pop', [{ stackItem, type: eventType }, undoManager])
+      }
     }
     transaction.changed.forEach((subProps, type) => {
       // destroy search marker if necessary
@@ -149,7 +152,7 @@ const popStackItem = (undoManager, stack, eventType) => {
  * Fires 'stack-item-popped' event when a stack item was popped from either the
  * undo- or the redo-stack. You may restore the saved stack information from `event.stackItem.meta`.
  *
- * @extends {Observable<'stack-item-added'|'stack-item-popped'|'stack-cleared'|'stack-item-updated'>}
+ * @extends {Observable<'stack-item-added'|'stack-item-pop'|'stack-item-popped'|'stack-cleared'|'stack-item-updated'>}
  */
 export class UndoManager extends Observable {
   /**
